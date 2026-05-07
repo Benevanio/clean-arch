@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { EnvConfigService } from '../../env-config.service'
 
-describe('EnvConfigService', () => {
+describe('EnvConfigService Unit Test', () => {
   let service: EnvConfigService
 
   const mockConfigService = {
