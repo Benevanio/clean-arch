@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { EnvConfigService } from '../../env-config.service'
 
 describe('EnvConfigService Unit Test', () => {
-  let service: EnvConfigService
+  let sut: EnvConfigService
 
   const mockConfigService = {
     get: jest.fn(),
@@ -20,10 +20,10 @@ describe('EnvConfigService Unit Test', () => {
       ],
     }).compile()
 
-    service = module.get<EnvConfigService>(EnvConfigService)
+    sut = module.get<EnvConfigService>(EnvConfigService)
   })
 
   it('should be defined', () => {
-    expect(service).toBeDefined()
+    expect(sut).toBeDefined()
   })
 })
