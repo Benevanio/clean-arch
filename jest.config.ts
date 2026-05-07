@@ -1,4 +1,4 @@
-import type { Config } from 'jest';
+import type { Config } from 'jest'
 
 const config: Config = {
   moduleFileExtensions: ['js', 'json', 'ts'],
@@ -6,7 +6,7 @@ const config: Config = {
   testEnvironment: 'node',
 
   transform: {
-    '^.+\\.(t|j)s$': '@swc/jest',
+    '^.+\\.(t|j)s$': 'ts-jest',
   },
 
   // 2. Localização dos Testes
@@ -50,6 +50,6 @@ const config: Config = {
 
   // 8. Timeout (NestJS às vezes demora a subir o AppModule em E2E)
   testTimeout: 30000,
-};
+}
 
-export default config;
+export default config
