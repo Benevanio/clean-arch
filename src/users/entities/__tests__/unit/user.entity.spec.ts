@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { faker } from '@faker-js/faker'
-import { User } from '../../../entities/user.entity.js'
+import { User } from '../../user.entity'
 
 describe('UserEntity', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
+
   it('Should create a Json object with the correct properties', () => {
     const user = {
       id: faker.datatype.uuid(),
