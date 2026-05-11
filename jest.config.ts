@@ -50,6 +50,7 @@ const config: Config = {
 
   // 8. Timeout (NestJS às vezes demora a subir o AppModule em E2E)
   testTimeout: 30000,
+  transformIgnorePatterns: ['node_modules/(?!(\\@faker-js/faker)/)'],
 }
 
 export default config
