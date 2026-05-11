@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker'
-import { User } from '../user.entity'
+import { User } from '../../../entities/user.entity.js'
 
 describe('UserEntity', () => {
-    beforeEach(() => {
-        jest.clearAllMocks()
-    })
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
   it('Should create a Json object with the correct properties', () => {
     const user = {
-      id: faker.string.uuid(),
-      name: faker.person.fullName(),
+      id: faker.datatype.uuid(),
+      name: faker.name.fullName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
     }
