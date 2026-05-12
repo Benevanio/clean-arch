@@ -1,6 +1,6 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import type { FastifyReply } from 'fastify';
-import { AppService } from './app.service';
+import { Controller, Get, Res } from '@nestjs/common'
+import type { FastifyReply } from 'fastify'
+import { AppService } from './app.service'
 
 @Controller()
 export class AppController {
@@ -8,6 +8,6 @@ export class AppController {
 
   @Get()
   getHello(@Res() res: FastifyReply): void {
-    res.send(this.appService.getHello());
+    res.send(this.appService.getHello())
   }
 }
