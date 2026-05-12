@@ -1,4 +1,5 @@
-import { faker } from '@faker-js/faker'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder'
 import { User } from '../../user.entity'
 
 describe('UserEntity', () => {
@@ -7,21 +8,15 @@ describe('UserEntity', () => {
   })
 
   it('Should create a Json object with the correct properties', () => {
-    const user = {
-      id: faker.datatype.uuid(),
-      name: faker.name.fullName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-    }
+    const props = UserDataBuilder({})
 
-    const userEntity = new User(user)
-    const json = userEntity.toJSON()
+    const userEntity = new User(props)
 
-    expect(json).toEqual({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
+    expect(userEntity.toJSON()).toEqual({
+      id: props.id,
+      name: props.name,
+      email: props.email,
+      password: props.password,
       createdAt: userEntity.createdAt,
     })
   })
