@@ -22,4 +22,31 @@ describe('UserEntity', () => {
       createdAt: userEntity.createdAt,
     })
   })
+  it('Constructor should set the properties correctly', () => {
+    const props = UserDataBuilder({})
+    expect(new User(props)).toMatchObject({
+      props: {
+        id: props.id,
+        name: props.name,
+        email: props.email,
+        password: props.password,
+        createdAt: props.createdAt,
+      },
+    })
+  })
+  it('Should create a UserEntity with the correct properties', () => {
+    const props = UserDataBuilder({})
+
+    const userEntity = new User(props)
+
+    expect(userEntity).toMatchObject({
+      props: {
+        id: props.id,
+        name: props.name,
+        email: props.email,
+        password: props.password,
+        createdAt: props.createdAt,
+      },
+    })
+  })
 })
