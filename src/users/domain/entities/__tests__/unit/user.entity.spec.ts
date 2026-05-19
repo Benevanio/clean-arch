@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder'
-import { User, UserEntity } from '../../user.entity'
+import { UserEntity } from '../../user.entity'
 
 describe('UserEntity', () => {
   beforeEach(() => {
@@ -12,7 +9,7 @@ describe('UserEntity', () => {
   it('Should create a Json object with the correct properties', () => {
     const props = UserDataBuilder({})
 
-    const userEntity = new User(props)
+    const userEntity = new UserEntity(props)
 
     expect(userEntity.toJSON()).toEqual({
       id: props.id,
@@ -24,7 +21,7 @@ describe('UserEntity', () => {
   })
   it('Constructor should set the properties correctly', () => {
     const props = UserDataBuilder({})
-    expect(new User(props)).toMatchObject({
+    expect(new UserEntity(props)).toMatchObject({
       props: {
         id: props.id,
         name: props.name,
@@ -37,7 +34,7 @@ describe('UserEntity', () => {
   it('Should create a UserEntity with the correct properties', () => {
     const props = UserDataBuilder({})
 
-    const userEntity = new User(props)
+    const userEntity = new UserEntity(props)
 
     expect(userEntity).toMatchObject({
       props: {
