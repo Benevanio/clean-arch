@@ -1,11 +1,11 @@
 import { Entity } from '@/shared/domain/entities/entity'
 
 export type UserProps = {
-  id: string
-  name: string
-  email: string
-  password: string
-  createdAt: Date
+  readonly id: string
+  readonly name: string
+  readonly email: string
+  readonly password: string
+  readonly createdAt: Date
 }
 
 type CreateUserProps = Omit<UserProps, 'createdAt'> & {
@@ -13,34 +13,63 @@ type CreateUserProps = Omit<UserProps, 'createdAt'> & {
 }
 
 export class UserEntity extends Entity<UserProps> {
+  aggregateProps: UserProps
   constructor(props: CreateUserProps) {
     super({
-      ...props,
+      id: props.id,
+      name: props.name,
+      email: props.email,
+      password: props.password,
       createdAt: props.createdAt ?? new Date(),
     })
+    this.aggregateProps = {
+      id: props.id,
+      name: props.name,
+      email: props.email,
+      password: props.password,
+      createdAt: props.createdAt ?? new Date(),
+    }
   }
 
-  get id() {
+  get props(): UserProps {
+    return this.aggregateProps
+  }
+
+  get id(): string {
     return this.props.id
   }
 
-  get name() {
+  get name(): string {
     return this.props.name
   }
 
-  get email() {
+  get email(): string {
     return this.props.email
   }
 
-  get password() {
+  get password(): string {
     return this.props.password
   }
 
-  get createdAt() {
+  get createdAt(): Date {
     return this.props.createdAt
   }
 
-  toJSON() {
+  update(value: string): void {
+    this.aggregateProps = {
+      ...this.aggregateProps,
+      name: value,
+    }
+  }
+
+  updatePassword(value: string): void {
+    this.aggregateProps = {
+      ...this.aggregateProps,
+      password: value,
+    }
+  }
+
+  toJSON(): UserProps {
     return {
       id: this.id,
       name: this.name,
