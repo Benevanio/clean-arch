@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable prettier/prettier */
 
 import {
-    validateSync,
+    validateSync as classValidatorValidateSync,
     ValidationError,
 } from 'class-validator'
 
@@ -20,17 +17,21 @@ export abstract class ClassValidatorFields<PropsValidator>
 
   validatedData: PropsValidator = {} as PropsValidator
 
-  validate(props: PropsValidator): boolean {
-    const errors: ValidationError[] = validateSync(this, {
+  validateSync(): ValidationError[] {
+    return classValidatorValidateSync(this, {
       skipMissingProperties: false,
     })
+  }
+
+  validate(props: PropsValidator): boolean {
+    const errors: ValidationError[] = this.validateSync()
 
     errors.forEach((error: ValidationError) => {
       const field = error.property
       const constraints = error.constraints
 
       if (constraints) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+         
         this.errors[field] = Object.values(constraints)
       }else {
         this.errors[field] = ['Invalid value']
