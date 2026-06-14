@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { ClassValidatorFields } from '@/shared/domain/validators/class-validator-fields'
 import {
     IsEmail,
     IsNotEmpty,
@@ -37,4 +38,10 @@ export class UserRules {
   constructor(props: UserRulesProps) {
     Object.assign(this, props)
   }
+}
+
+export class UserValidator  extends ClassValidatorFields<UserRules> {
+    validate(props: UserRulesProps): boolean {
+        return super.validate(new UserRules(props ?? {} as UserRulesProps))
+    }
 }
