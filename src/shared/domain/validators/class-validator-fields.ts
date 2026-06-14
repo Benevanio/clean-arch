@@ -1,13 +1,13 @@
 /* eslint-disable prettier/prettier */
 
 import {
-    validateSync as classValidatorValidateSync,
-    ValidationError,
+  validateSync as classValidatorValidateSync,
+  ValidationError,
 } from 'class-validator'
 
 import {
-    FieldsErros,
-    ValidatorFieldsInterface,
+  FieldsErros,
+  ValidatorFieldsInterface,
 } from './validator-fields.interface'
 
 export abstract class ClassValidatorFields<PropsValidator>
@@ -22,7 +22,6 @@ export abstract class ClassValidatorFields<PropsValidator>
       skipMissingProperties: false,
     })
   }
-
   validate(props: PropsValidator): boolean {
     const errors: ValidationError[] = this.validateSync()
 
