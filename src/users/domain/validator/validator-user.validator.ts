@@ -1,4 +1,18 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator'
+/* eslint-disable prettier/prettier */
+import {
+    IsEmail,
+    IsNotEmpty,
+    IsString,
+    MaxLength,
+    MinLength
+} from 'class-validator'
+
+export type UserRulesProps = {
+  name: string
+  email: string
+  password: string
+  createdAt?: Date
+}
 
 export class UserRules {
   @MaxLength(255, { message: 'Name must be less than 255 characters' })
@@ -6,7 +20,21 @@ export class UserRules {
   @IsNotEmpty({ message: 'Name is required' })
   name!: string
 
-  @IsNumber({}, { message: 'Price must be a number' })
-  @IsNotEmpty({ message: 'Price is required' })
-  price!: number
+  @MaxLength(255, { message: 'Email must be less than 255 characters' })
+  @IsString({ message: 'Email must be a string' })
+  @IsNotEmpty({ message: 'Email is required' })
+  @IsEmail({}, { message: 'Email must be a valid email address' })
+  email!: string
+
+  @MaxLength(255, { message: 'Password must be less than 255 characters' })
+  @IsString({ message: 'Password must be a string' })
+  @IsNotEmpty({ message: 'Password is required' })
+  @MinLength(8, { message: 'Password must be at least 8 characters' })
+  password!: string
+
+  createdAt?: Date
+
+  constructor(props: UserRulesProps) {
+    Object.assign(this, props)
+  }
 }

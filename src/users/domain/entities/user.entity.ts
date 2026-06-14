@@ -1,6 +1,6 @@
 import { Entity } from '@/shared/domain/entities/entity'
 
-export type UserProps = {
+type UserProps = {
   readonly id: string
   readonly name: string
   readonly email: string
