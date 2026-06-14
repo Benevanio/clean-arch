@@ -36,4 +36,23 @@ describe('ClassValidatorFields Unit Tests', () => {
     expect(validator.errors).toEqual({})
     expect(validator.validatedData).toEqual({ field: 'value' })
   })
+  it('Should validate with errors without constraints', () => {
+    const validator = new StubClassValidatorFields()
+    jest.spyOn(validator, 'validateSync').mockReturnValue([
+      {
+        property: 'field',
+        constraints: undefined,
+      },
+    ])
+
+    const isValid = validator.validate({ field: '' })
+    expect(isValid).toBe(false)
+    expect(validator.errors).toEqual({
+      field: ['Invalid value'],
+    })
+    expect(validator.validatedData).toEqual({})
+    expect(validator.errors).toEqual({
+      field: ['Invalid value'],
+    })
+  })
 })
