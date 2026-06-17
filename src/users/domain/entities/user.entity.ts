@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Entity } from '@/shared/domain/entities/entity'
+import { EntityValidationError } from '@/shared/domain/errors/validation-error'
 import { UserValidatorFactory } from '../validator/validator-user.validator'
 
 type UserProps = {
@@ -34,7 +36,11 @@ export class UserEntity extends Entity<UserProps> {
 
   static validate(props: CreateUserProps): boolean {
     const validator = UserValidatorFactory.create()
-    return validator.validate(props)
+    const isValid = validator.validate(props)
+    if (!isValid) {
+      throw new EntityValidationError(validator.errors as any)
+    }
+    return isValid
   }
 
   get props(): UserProps {
