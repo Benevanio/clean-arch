@@ -1,4 +1,5 @@
 import { Entity } from '@/shared/domain/entities/entity'
+import { UserValidatorFactory } from '../validator/validator-user.validator'
 
 type UserProps = {
   readonly id: string
@@ -31,6 +32,11 @@ export class UserEntity extends Entity<UserProps> {
     }
   }
 
+  static validate(props: CreateUserProps): boolean {
+    const validator = UserValidatorFactory.create()
+    return validator.validate(props)
+  }
+
   get props(): UserProps {
     return this.aggregateProps
   }
@@ -56,17 +62,11 @@ export class UserEntity extends Entity<UserProps> {
   }
 
   update(value: string): void {
-    this.aggregateProps = {
-      ...this.aggregateProps,
-      name: value,
-    }
+    UserEntity.validate({ ...this.props, name: value })
   }
 
   updatePassword(value: string): void {
-    this.aggregateProps = {
-      ...this.aggregateProps,
-      password: value,
-    }
+    UserEntity.validate({ ...this.props, password: value })
   }
 
   toJSON(): UserProps {
