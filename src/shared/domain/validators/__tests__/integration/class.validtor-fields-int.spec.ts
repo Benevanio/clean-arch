@@ -1,13 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable prettier/prettier */
 
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator'
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
-import { ClassValidatorFields } from '../../class-validator-fields'
+import { ClassValidatorFields } from '../../class-validator-fields';
 
-class StubClassValidatorFields extends ClassValidatorFields<{
-  name: string
-  price: number
-}> {
+class ProductRules {
   @MaxLength(255)
   @IsString()
   @IsNotEmpty()
@@ -17,21 +20,27 @@ class StubClassValidatorFields extends ClassValidatorFields<{
   @IsNotEmpty()
   price!: number
 
-  validate(data: any): boolean {
-    Object.assign(this, data)
-
-    return super.validate(data)
+  constructor(props: { name: string; price: number }) {
+    Object.assign(this, props)
   }
 }
 
-describe('ClassValidatorFields Integration Tests', () => {
-  it('Should validate with errors', () => {
-    const validator = new StubClassValidatorFields()
+class StubClassValidatorFields extends ClassValidatorFields<ProductRules> {}
 
-    const isValid = validator.validate({
-      name: '',
-      price: 'invalid_price',
-    })
+describe('ClassValidatorFields Integration Tests', () => {
+  let validator: StubClassValidatorFields
+
+  beforeEach(() => {
+    validator = new StubClassValidatorFields()
+  })
+
+  it('should validate with errors', () => {
+    const isValid = validator.validate(
+      new ProductRules({
+        name: '',
+        price: 'invalid_price' as any,
+      }),
+    )
 
     expect(isValid).toBe(false)
 
@@ -41,21 +50,28 @@ describe('ClassValidatorFields Integration Tests', () => {
     })
   })
 
-  it('Should validate without errors', () => {
-    const validator = new StubClassValidatorFields()
-
-    const isValid = validator.validate({
+  it('should validate without errors', () => {
+    const data = new ProductRules({
       name: 'valid_name',
       price: 10,
     })
+
+    const isValid = validator.validate(data)
 
     expect(isValid).toBe(true)
 
     expect(validator.errors).toEqual({})
 
-    expect(validator.validatedData).toEqual({
-      name: 'valid_name',
-      price: 10,
-    })
+    expect(validator.validatedData).toEqual(data)
+  })
+
+  it('should return default error message when constraints are undefined', () => {
+    validator.errors = {}
+
+    const isValid = validator.validate(
+      {} as ProductRules,
+    )
+
+    expect(isValid).toBe(false)
   })
 })

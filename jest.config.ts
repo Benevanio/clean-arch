@@ -15,4 +15,18 @@ module.exports = {
   },
 
   clearMocks: true,
+
+  collectCoverage: true,
+
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/main.ts',
+    '!src/**/*.spec.ts',
+    '!src/**/__tests__/**',
+    '!src/**/*.module.ts',
+  ],
+
+  coverageDirectory: 'coverage',
+
+  coverageReporters: ['text', 'lcov', 'html'],
 }

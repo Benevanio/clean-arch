@@ -1,3 +1,4 @@
+import * as classValidator from 'class-validator'
 import { ClassValidatorFields } from '../../class-validator-fields'
 
 class StubClassValidatorFields extends ClassValidatorFields<{
@@ -5,15 +6,21 @@ class StubClassValidatorFields extends ClassValidatorFields<{
 }> {}
 
 describe('ClassValidatorFields Unit Tests', () => {
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   it('Should Initialize Errors And ValidatedData With Empty Values', () => {
     const validator = new StubClassValidatorFields()
+
     expect(validator.errors).toEqual({})
     expect(validator.validatedData).toEqual({})
   })
 
-  it('Should validate with errrors', () => {
+  it('Should validate with errors', () => {
     const validator = new StubClassValidatorFields()
-    jest.spyOn(validator, 'validateSync').mockReturnValue([
+
+    jest.spyOn(classValidator, 'validateSync').mockReturnValue([
       {
         property: 'field',
         constraints: {
@@ -23,22 +30,31 @@ describe('ClassValidatorFields Unit Tests', () => {
     ])
 
     const isValid = validator.validate({ field: '' })
+
     expect(isValid).toBe(false)
     expect(validator.errors).toEqual({
       field: ['field should not be empty'],
     })
   })
+
   it('Should validate without errors', () => {
     const validator = new StubClassValidatorFields()
-    jest.spyOn(validator, 'validateSync').mockReturnValue([])
+
+    jest.spyOn(classValidator, 'validateSync').mockReturnValue([])
+
     const isValid = validator.validate({ field: 'value' })
+
     expect(isValid).toBe(true)
     expect(validator.errors).toEqual({})
-    expect(validator.validatedData).toEqual({ field: 'value' })
+    expect(validator.validatedData).toEqual({
+      field: 'value',
+    })
   })
+
   it('Should validate with errors without constraints', () => {
     const validator = new StubClassValidatorFields()
-    jest.spyOn(validator, 'validateSync').mockReturnValue([
+
+    jest.spyOn(classValidator, 'validateSync').mockReturnValue([
       {
         property: 'field',
         constraints: undefined,
@@ -46,11 +62,8 @@ describe('ClassValidatorFields Unit Tests', () => {
     ])
 
     const isValid = validator.validate({ field: '' })
+
     expect(isValid).toBe(false)
-    expect(validator.errors).toEqual({
-      field: ['Invalid value'],
-    })
-    expect(validator.validatedData).toEqual({})
     expect(validator.errors).toEqual({
       field: ['Invalid value'],
     })

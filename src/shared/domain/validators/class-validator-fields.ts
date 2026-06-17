@@ -17,22 +17,20 @@ export abstract class ClassValidatorFields<PropsValidator>
 
   validatedData: PropsValidator = {} as PropsValidator
 
-  validateSync(): ValidationError[] {
-    return classValidatorValidateSync(this, {
+  validate(props: PropsValidator): boolean {
+    this.errors = {}
+
+    const errors: ValidationError[] = classValidatorValidateSync(props as object, {
       skipMissingProperties: false,
     })
-  }
-  validate(props: PropsValidator): boolean {
-    const errors: ValidationError[] = this.validateSync()
 
     errors.forEach((error: ValidationError) => {
       const field = error.property
       const constraints = error.constraints
 
       if (constraints) {
-         
         this.errors[field] = Object.values(constraints)
-      }else {
+      } else {
         this.errors[field] = ['Invalid value']
       }
     })
@@ -43,5 +41,4 @@ export abstract class ClassValidatorFields<PropsValidator>
 
     return errors.length === 0
   }
-
 }

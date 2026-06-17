@@ -1,11 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { ClassValidatorFields } from '@/shared/domain/validators/class-validator-fields'
 import {
-    IsEmail,
-    IsNotEmpty,
-    IsString,
-    MaxLength,
-    MinLength
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength
 } from 'class-validator'
 
 export type UserRulesProps = {
@@ -33,6 +35,8 @@ export class UserRules {
   @MinLength(8, { message: 'Password must be at least 8 characters' })
   password!: string
 
+  @IsDate({ message: 'CreatedAt must be a date' })
+  @IsOptional({ message: 'CreatedAt is optional' })
   createdAt?: Date
 
   constructor(props: UserRulesProps) {
