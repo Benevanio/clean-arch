@@ -3,7 +3,7 @@ import { Entity } from '@/shared/domain/entities/entity'
 import { EntityValidationError } from '@/shared/domain/errors/validation-error'
 import { UserValidatorFactory } from '../validator/validator-user.validator'
 
-type UserProps = {
+export type UserProps = {
   readonly id: string
   readonly name: string
   readonly email: string
