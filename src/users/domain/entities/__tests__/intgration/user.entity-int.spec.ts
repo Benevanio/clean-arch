@@ -17,4 +17,16 @@ describe('UserEntity Integration Test', () => {
     expect(user.password).toBe(userProps.password)
     expect(user.createdAt).toBe(userProps.createdAt)
   })
+  it('should accept invalid properties without throwing', () => {
+    const invalidUserProps = {
+      id: '1',
+      name: '',
+      email: 'invalid-email',
+      password: 'short',
+    }
+
+    const user = new UserEntity(invalidUserProps)
+
+    expect(user).toBeInstanceOf(UserEntity)
+  })
 })
