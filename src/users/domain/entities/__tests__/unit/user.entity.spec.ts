@@ -1,59 +1,133 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data-builder'
+import { EntityValidationError } from '@/shared/domain/errors/validation-error'
+import { UserValidatorFactory } from '@/users/domain/validator/validator-user.validator'
 import { UserEntity } from '../../user.entity'
 
+jest.mock('@/users/domain/validator/validator-user.validator', () => ({
+  UserValidatorFactory: {
+    create: jest.fn(),
+  },
+}))
+
 describe('UserEntity', () => {
+  const mockDate = new Date('2026-01-01T00:00:00.000Z')
+
+  const props = {
+    id: '1',
+    name: 'Bene',
+    email: 'bene@test.com',
+    password: '123456',
+    createdAt: mockDate,
+  }
+
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('Should create a Json object with the correct properties', () => {
-    const props = UserDataBuilder({})
+  describe('constructor', () => {
+    it('deve criar uma entidade com createdAt informado', () => {
+      const entity = new UserEntity(props)
 
-    const userEntity = new UserEntity(props)
-
-    expect(userEntity.toJSON()).toEqual({
-      id: props.id,
-      name: props.name,
-      email: props.email,
-      password: props.password,
-      createdAt: userEntity.createdAt,
+      expect(entity.id).toBe(props.id)
+      expect(entity.name).toBe(props.name)
+      expect(entity.email).toBe(props.email)
+      expect(entity.password).toBe(props.password)
+      expect(entity.createdAt).toBe(mockDate)
     })
-  })
-  it('Constructor should set the properties correctly', () => {
-    const props = UserDataBuilder({})
-    expect(new UserEntity(props)).toMatchObject({
-      props: {
-        id: props.id,
-        name: props.name,
-        email: props.email,
-        password: props.password,
-        createdAt: props.createdAt,
-      },
-    })
-  })
-  it('Should create a UserEntity with the correct properties', () => {
-    const props = UserDataBuilder({})
 
-    const userEntity = new UserEntity(props)
+    it('deve criar uma entidade usando a data atual quando createdAt não for informado', () => {
+      const entity = new UserEntity({
+        id: '1',
+        name: 'Bene',
+        email: 'bene@test.com',
+        password: '123456',
+      })
 
-    expect(userEntity).toMatchObject({
-      props: {
-        id: props.id,
-        name: props.name,
-        email: props.email,
-        password: props.password,
-        createdAt: props.createdAt,
-      },
+      expect(entity.createdAt).toBeInstanceOf(Date)
     })
   })
 
-  it("Get Name Field should return the user's name", () => {
-    const props = UserDataBuilder({})
+  describe('validate', () => {
+    it('deve retornar true quando os dados forem válidos', () => {
+      const validate = jest.fn().mockReturnValue(true)
 
-    const userEntity = new UserEntity(props)
+      ;(UserValidatorFactory.create as jest.Mock).mockReturnValue({
+        validate,
+      })
 
-    expect(userEntity.name).toBe(props.name)
+      const result = UserEntity.validate(props)
+
+      expect(result).toBe(true)
+      expect(validate).toHaveBeenCalledWith(props)
+    })
+
+    it('deve lançar EntityValidationError quando os dados forem inválidos', () => {
+      const errors = {
+        name: ['Nome inválido'],
+      }
+
+      const validate = jest.fn().mockReturnValue(false)
+
+      ;(UserValidatorFactory.create as jest.Mock).mockReturnValue({
+        validate,
+        errors,
+      })
+
+      expect(() => UserEntity.validate(props)).toThrow(EntityValidationError)
+    })
+  })
+
+  describe('getters', () => {
+    it('deve retornar todos os valores corretamente', () => {
+      const entity = new UserEntity(props)
+
+      expect(entity.id).toBe('1')
+      expect(entity.name).toBe('Bene')
+      expect(entity.email).toBe('bene@test.com')
+      expect(entity.password).toBe('123456')
+      expect(entity.createdAt).toBe(mockDate)
+      expect(entity.props).toEqual(props)
+    })
+  })
+
+  describe('update', () => {
+    it('deve validar ao atualizar o nome', () => {
+      const validateSpy = jest
+        .spyOn(UserEntity, 'validate')
+        .mockReturnValue(true)
+
+      const entity = new UserEntity(props)
+
+      entity.update('Novo Nome')
+
+      expect(validateSpy).toHaveBeenCalledWith({
+        ...props,
+        name: 'Novo Nome',
+      })
+    })
+  })
+
+  describe('updatePassword', () => {
+    it('deve validar ao atualizar a senha', () => {
+      const validateSpy = jest
+        .spyOn(UserEntity, 'validate')
+        .mockReturnValue(true)
+
+      const entity = new UserEntity(props)
+
+      entity.updatePassword('novaSenha123')
+
+      expect(validateSpy).toHaveBeenCalledWith({
+        ...props,
+        password: 'novaSenha123',
+      })
+    })
+  })
+
+  describe('toJSON', () => {
+    it('deve retornar os dados serializados', () => {
+      const entity = new UserEntity(props)
+
+      expect(entity.toJSON()).toEqual(props)
+    })
   })
 })

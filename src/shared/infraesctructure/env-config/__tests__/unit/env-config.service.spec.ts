@@ -1,29 +1,39 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+
 import { ConfigService } from '@nestjs/config'
-import { Test, TestingModule } from '@nestjs/testing'
 import { EnvConfigService } from '../../env-config.service'
 
-describe('EnvConfigService Unit Test', () => {
-  let sut: EnvConfigService
+describe('EnvConfigService', () => {
+  let service: EnvConfigService
+  let configService: jest.Mocked<ConfigService>
 
-  const mockConfigService = {
-    get: jest.fn(),
-  }
+  beforeEach(() => {
+    configService = {
+      get: jest.fn(),
+    } as unknown as jest.Mocked<ConfigService>
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        EnvConfigService,
-        {
-          provide: ConfigService,
-          useValue: mockConfigService,
-        },
-      ],
-    }).compile()
-
-    sut = module.get<EnvConfigService>(EnvConfigService)
+    service = new EnvConfigService(configService)
   })
 
-  it('should be defined', () => {
-    expect(sut).toBeDefined()
+  describe('getAppPort', () => {
+    it('deve retornar a porta configurada', () => {
+      configService.get.mockReturnValue(8080)
+
+      const result = service.getAppPort()
+
+      expect(result).toBe(8080)
+      expect(configService.get).toHaveBeenCalledWith('PORT', 3000)
+    })
+  })
+
+  describe('getNodeEnv', () => {
+    it('deve retornar o ambiente configurado', () => {
+      configService.get.mockReturnValue('production')
+
+      const result = service.getNodeEnv()
+
+      expect(result).toBe('production')
+      expect(configService.get).toHaveBeenCalledWith('NODE_ENV', 'development')
+    })
   })
 })

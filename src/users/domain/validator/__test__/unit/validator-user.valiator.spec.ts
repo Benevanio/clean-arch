@@ -1,4 +1,7 @@
-import { UserValidator } from '../../validator-user.validator'
+import {
+  UserValidator,
+  UserValidatorFactory,
+} from '../../validator-user.validator'
 
 describe('UserValidator Unit Tests', () => {
   let sut: UserValidator
@@ -54,6 +57,14 @@ describe('UserValidator Unit Tests', () => {
       ).toBe(false)
 
       expect(sut.errors).toHaveProperty('password')
+    })
+  })
+
+  describe('UserValidatorFactory', () => {
+    it('should create a UserValidator instance', () => {
+      const validator = UserValidatorFactory.create()
+
+      expect(validator).toBeInstanceOf(UserValidator)
     })
   })
 })
