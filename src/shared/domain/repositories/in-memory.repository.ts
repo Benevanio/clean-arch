@@ -1,4 +1,5 @@
 import { Entity } from '../entities/entity'
+import { NotFoundError } from '../errors/not-found-error'
 import { RepositoryInterface } from './repository-contracts'
 
 export abstract class InMemoryRepository<
@@ -32,7 +33,7 @@ export abstract class InMemoryRepository<
     const entityIndex = this.items.findIndex(item => item.id === entity.id)
 
     if (entityIndex === -1) {
-      return Promise.reject(new Error(`Entity with id ${entity.id} not found`))
+      return Promise.reject(new NotFoundError('Entity', entity.id))
     }
 
     this.items[entityIndex] = entity
@@ -44,7 +45,7 @@ export abstract class InMemoryRepository<
     const entityIndex = this.items.findIndex(item => item.id === id)
 
     if (entityIndex === -1) {
-      return Promise.reject(new Error(`Entity with id ${id} not found`))
+      return Promise.reject(new NotFoundError('Entity', id))
     }
 
     this.items.splice(entityIndex, 1)
